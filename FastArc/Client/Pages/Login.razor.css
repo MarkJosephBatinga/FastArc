@@ -1,0 +1,86 @@
+﻿.login-container {
+    width: 100%;
+    min-height: 80vh;
+    background-color: #A2D2FF;
+}
+
+.login-box {
+    min-height: 50vh;
+    width: 30%;
+    margin: 80px;
+    background-color: #ffffff;
+}
+
+.switch-box {
+    margin-top: 30px;
+}
+
+.switch-link {
+    border: none;
+    background-color: transparent;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    color: #05396B;
+}
+
+.form-box {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.input-label {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    color: #05396B;
+}
+
+.input-text {
+    background: #A2D2FF;
+    border-radius: 5px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #FEF9EF;
+    border: none;
+    padding: 5px 0px;
+    margin-bottom: 30px;
+}
+
+.submit-button {
+    background: #FFFFFF;
+    border: 3px solid #A2D2FF;
+    box-sizing: border-box;
+    border-radius: 20px;
+    padding: 10px 80px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 0.2em;
+    color: #A2D2FF;
+    margin: 10px;
+}
+
+    .submit-button:hover {
+        background-color: #05396B;
+    }
+
+.forgot-box {
+    margin-top: 50px;
+}
+
+.forgot-text {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 21px;
+    text-align: center;
+    color: #05396B;
+}

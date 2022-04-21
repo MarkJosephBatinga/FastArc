@@ -1,0 +1,104 @@
+﻿@page "/login"
+@inject IJSRuntime JsRuntime
+@inject IUserService UserService
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager Navigation
+
+<div class="container-fluid login-container d-flex justify-content-center align-items-center">
+    <div class="login-box d-flex flex-column align-items-center">
+        <div class="img-box">
+            <img src="./css/Imgs/logo2.jpg" alt="logo" class="header-logo">
+        </div>
+        <div class="switch-box">
+            <button class="switch-link mx-5" @onclick="() => SwitchPage(1)">Login</button>
+            <button class="switch-link mx-5" @onclick="() => SwitchPage(2)">Sign Up</button>
+        </div>
+        @if (switchPage == 1)
+        {
+            <EditForm Model="ExistingUser" OnValidSubmit="LoginOnSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="form-box d-flex flex-column px-5">
+                    <p class="input-label">Email</p>
+                    <ValidationMessage For="() => ExistingUser.EmailAddress" />
+                    <input type="text" class="input-text" @bind-value="ExistingUser.EmailAddress">
+                    <p class="input-label">Password</p>
+                    <ValidationMessage For="() => ExistingUser.Password" />
+                    <input type="password" class="input-text" @bind-value="ExistingUser.Password">
+                </div>
+                <div class="submit-box d-flex justify-content-center">
+                    <button type="submit" class="submit-button">Login</button>
+                </div>
+            </EditForm>
+            <div class="forgot-box">
+                <p class="forgot-text">Forgot Password? <a href="">Click Here</a></p>
+            </div>
+        }
+        else if (switchPage == 2)
+        {
+            <EditForm Model="newUser" OnValidSubmit="RegisterOnSubmit">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="form-box d-flex flex-column px-5">
+                    <p class="input-label">Full Name</p>
+                    <ValidationMessage For="() => newUser.FullName" />
+                    <input type="text" class="input-text" @bind-value="newUser.FullName">
+                    <p class="input-label">Mobile Number</p>
+                    <ValidationMessage For="() => newUser.Phone" />
+                    <input type="text" class="input-text" @bind-value="newUser.Phone">
+                    <p class="input-label">Email</p>
+                    <ValidationMessage For="() => newUser.EmailAddress" />
+                    <input type="text" class="input-text" @bind-value="newUser.EmailAddress">
+                    <p class="input-label">Password</p>
+                    <ValidationMessage For="() => newUser.Password" />
+                    <input type="password" class="input-text" @bind-value="newUser.Password">
+                    <p class="input-label">Confirm Password</p>
+                    <ValidationMessage For="() => newUser.ConfirmPassword" />
+                    <input type="password" class="input-text" @bind-value="newUser.ConfirmPassword">
+                </div>
+                <div class="submit-box d-flex justify-content-center">
+                    <button type="submit" class="submit-button">Register</button>
+                </div>
+            </EditForm>
+            <div class="forgot-box">
+                <p class="forgot-text">Already Have An Account? <a href="">Click Here</a></p>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    LoginUser ExistingUser = new LoginUser();
+    User newUser = new User();
+    int switchPage = 1;
+
+    private void SwitchPage(int pageNum)
+    {
+        switchPage = pageNum;
+    }
+
+    private async void LoginOnSubmit()
+    {
+        var user = await UserService.LoginUser(ExistingUser);
+        if (user != null)
+        {
+            await LocalStorage.SetItemAsStringAsync("username", ExistingUser.EmailAddress);
+            await AuthProvider.GetAuthenticationStateAsync();
+            Navigation.NavigateTo("");
+        }
+        else
+        {
+            Console.WriteLine("user Not Found");
+        }
+    }
+
+    private async void RegisterOnSubmit()
+    {
+        var Users = await UserService.RegisterUser(newUser);
+        if (Users != null)
+        {
+            await LocalStorage.SetItemAsStringAsync("username", newUser.EmailAddress);
+            await AuthProvider.GetAuthenticationStateAsync();
+            Navigation.NavigateTo("");
+        }
+    }
+}

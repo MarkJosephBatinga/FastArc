@@ -1,0 +1,84 @@
+﻿@inject ISyncLocalStorageService SyncLocalStorage
+@inject ILocalStorageService LocalStorage
+@inject IUserService UserService
+@inject AuthenticationStateProvider AuthState
+@inject NavigationManager Navigate
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid nav-container">
+        <a class="navbar-brand" href="#">
+            <img class="header-logo" src="./css/Imgs/logo2.jpg" alt="FastArc">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">
+                        <p class="nav-text">Home</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <p class="nav-text">About Us</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <p class="nav-text">Car List</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <p class="nav-text">Contact</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <p class="nav-text">Gallery</p>
+                    </a>
+                </li>
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item dropdown">
+                            <div class="btn-group">
+                                <button type="button" class="btn dropdown-btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    My Account
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">@SyncLocalStorage.GetItemAsString("username") Account</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" @onclick="Logout">Logout</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">
+                                <p class="nav-text">Login</p>
+                            </a>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private async void Logout()
+    {
+        await LocalStorage.RemoveItemAsync("username");
+        await AuthState.GetAuthenticationStateAsync();
+        Navigate.NavigateTo("/login");
+    }
+}
