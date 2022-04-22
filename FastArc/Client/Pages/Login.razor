@@ -28,7 +28,7 @@
                     <input type="password" class="input-text" @bind-value="ExistingUser.Password">
                 </div>
                 <div class="submit-box d-flex justify-content-center">
-                    <button type="submit" class="submit-button @disable">Login</button>
+                    <button type="submit" class="submit-button" disabled="@disable">Login</button>
                 </div>
             </EditForm>
             <div class="forgot-box">
@@ -57,7 +57,7 @@
                     <input type="password" class="input-text" @bind-value="newUser.ConfirmPassword">
                 </div>
                 <div class="submit-box d-flex justify-content-center">
-                    <button type="submit" class="submit-button @disable">Register</button>
+                    <button type="submit" class="submit-button" disabled="@disable">Register</button>
                 </div>
             </EditForm>
             <div class="forgot-box">
@@ -71,15 +71,16 @@
     LoginUser ExistingUser = new LoginUser();
     User newUser = new User();
     int switchPage = 1;
-    string disable = string.Empty;
+    bool disable = false;
 
     private void SwitchPage(int pageNum)
     {
         switchPage = pageNum;
     }
 
-    private async void LoginOnSubmit()
+    private async Task LoginOnSubmit()
     {
+        disable = true;
         var user = await UserService.LoginUser(ExistingUser);
         if (user.Id != 0)
         {
@@ -91,11 +92,12 @@
         {
             Toast.ShowError("Invalid Email or Password, Please Try Again", "Failed to Login");
         }
+        disable = false;
     }
 
-    private async void RegisterOnSubmit()
+    private async Task RegisterOnSubmit()
     {
-        disable = "d-none";
+        disable = true;
         var Users = await UserService.RegisterUser(newUser);
         if (Users != null)
         {
@@ -103,6 +105,6 @@
             await AuthProvider.GetAuthenticationStateAsync();
             Navigation.NavigateTo("");
         }
-        disable = string.Empty;
+        disable = false;
     }
 }
