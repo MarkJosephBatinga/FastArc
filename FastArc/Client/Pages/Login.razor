@@ -3,6 +3,7 @@
 @inject IUserService UserService
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthProvider
+@inject IToastService Toast
 @inject NavigationManager Navigation
 
 <div class="container-fluid login-container d-flex justify-content-center align-items-center">
@@ -27,7 +28,7 @@
                     <input type="password" class="input-text" @bind-value="ExistingUser.Password">
                 </div>
                 <div class="submit-box d-flex justify-content-center">
-                    <button type="submit" class="submit-button">Login</button>
+                    <button type="submit" class="submit-button @disable">Login</button>
                 </div>
             </EditForm>
             <div class="forgot-box">
@@ -56,7 +57,7 @@
                     <input type="password" class="input-text" @bind-value="newUser.ConfirmPassword">
                 </div>
                 <div class="submit-box d-flex justify-content-center">
-                    <button type="submit" class="submit-button">Register</button>
+                    <button type="submit" class="submit-button @disable">Register</button>
                 </div>
             </EditForm>
             <div class="forgot-box">
@@ -70,6 +71,7 @@
     LoginUser ExistingUser = new LoginUser();
     User newUser = new User();
     int switchPage = 1;
+    string disable = string.Empty;
 
     private void SwitchPage(int pageNum)
     {
@@ -79,7 +81,7 @@
     private async void LoginOnSubmit()
     {
         var user = await UserService.LoginUser(ExistingUser);
-        if (user != null)
+        if (user.Id != 0)
         {
             await LocalStorage.SetItemAsStringAsync("username", ExistingUser.EmailAddress);
             await AuthProvider.GetAuthenticationStateAsync();
@@ -87,12 +89,13 @@
         }
         else
         {
-            Console.WriteLine("user Not Found");
+            Toast.ShowError("Invalid Email or Password, Please Try Again", "Failed to Login");
         }
     }
 
     private async void RegisterOnSubmit()
     {
+        disable = "d-none";
         var Users = await UserService.RegisterUser(newUser);
         if (Users != null)
         {
@@ -100,5 +103,6 @@
             await AuthProvider.GetAuthenticationStateAsync();
             Navigation.NavigateTo("");
         }
+        disable = string.Empty;
     }
 }

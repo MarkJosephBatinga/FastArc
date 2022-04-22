@@ -27,7 +27,6 @@ namespace FastArc.Shared
         [MinLength(8, ErrorMessage = "8 Minimum Characters Required")]
         public string Password { get; set; }
 
-
         [NotMapped]
         [Compare("Password", ErrorMessage = "Password and Confirm Password must match")]
         public string ConfirmPassword { get; set; }
